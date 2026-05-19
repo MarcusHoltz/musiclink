@@ -1,0 +1,32 @@
+---
+services:
+    navidrome:
+        container_name: navidrome
+        network_mode: host
+        image: deluan/navidrome
+        environment:
+            - TZ=America/Denver
+            - HOST_OS=Unraid
+            - HOST_HOSTNAME=unraid
+            - HOST_CONTAINERNAME=navidrome
+            - TCP_PORT_4533=4533
+            - ND_SCANSCHEDULE=1m
+            - ND_LOGLEVEL=info
+            - ND_SESSIONTIMEOUT=24h
+            - ND_BASEURL=
+            - ND_IMAGECACHESIZE=400MB
+        labels:
+            - net.unraid.docker.managed=dockerman
+            - 'net.unraid.docker.webui=http://[IP]:[PORT:4533]/'
+            - 'net.unraid.docker.icon=https://raw.githubusercontent.com/selfhosters/unRAID-CA-templates/master/templates/img/navidrome.png'
+        volumes:
+            - '/mnt/user/appdata/navidrome:/data:rw'
+
+            # output share  navidrome reads your curated library from here
+            - '/mnt/user/CuratedMusic:/CuratedMusic:ro'
+
+            # symlinks inside CuratedMusic point to these paths on the host
+            # navidrome needs them mounted at the exact same path or links are dead
+            - '/mnt/user/FlacLibrary:/mnt/user/FlacLibrary:ro'
+            - '/mnt/user/NewDownloads:/mnt/user/NewDownloads:ro'
+            - '/mnt/user/Soundtracks:/mnt/user/Soundtracks:ro'
