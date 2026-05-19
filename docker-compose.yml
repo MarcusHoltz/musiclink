@@ -22,7 +22,7 @@ services:
       # config + manifest - leave alone
       - musiclink-config:/config
 
-      # SOURCE SHARES
+      # SOURCE SHARES - LOOK HERE - CHANGE HERE - EDIT
       # host path = container path - or symlinks break
       - /mnt/user/FlacLibrary:/mnt/user/FlacLibrary:ro
       - /mnt/user/NewDownloads:/mnt/user/NewDownloads:ro
@@ -38,29 +38,6 @@ services:
       retries: 3
       start_period: 15s
 
-  # ── Navidrome (or any app that reads your output share) ──────────────────────
-  # symlinks in CuratedMusic point back to source shares like /mnt/user/FlacLibrary
-  # navidrome must have those same source shares mounted or it cannot follow them
-  navidrome:
-    image: deluan/navidrome:latest
-    container_name: navidrome
-    restart: unless-stopped
-    ports:
-      - "4533:4533"
-    environment:
-      ND_MUSICFOLDER: /music
-      ND_DATAFOLDER: /data
-    volumes:
-      - navidrome-data:/data
-      # output share  navidrome reads from here
-      - /mnt/user/CuratedMusic:/music:ro
-      # source shares  must match musiclink above  symlinks point here
-      - /mnt/user/FlacLibrary:/mnt/user/FlacLibrary:ro
-      - /mnt/user/NewDownloads:/mnt/user/NewDownloads:ro
-      - /mnt/user/Soundtracks:/mnt/user/Soundtracks:ro
-
 volumes:
   musiclink-config:
-    driver: local
-  navidrome-data:
     driver: local
